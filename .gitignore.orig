@@ -1,9 +1,12 @@
 /javadoc
 /web/WEB-INF
+<<<<<<< HEAD
 .idea
 out
 wxpay-sdk.iml
+=======
 
 wxpay-sdk.iml
 .idea
 out
+>>>>>>> followers
