@@ -1,2 +1,5 @@
 /javadoc
 /web/WEB-INF
+.idea
+out
+wxpay-sdk.iml
