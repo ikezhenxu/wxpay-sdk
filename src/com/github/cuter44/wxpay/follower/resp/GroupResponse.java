@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * Created by kezhenxu on 4/15/15.
  */
-public class GroupOperatorResponse extends WxmpResponseBase {
+public class GroupResponse extends WxmpResponseBase {
 
 	public static final String GROUP  = "group";
 	public static final String GROUPS = "groups";
 	public static final String ID     = "id";
 	public static final String NAME   = "name";
 
-	public GroupOperatorResponse ( String jsonString ) {
+	public GroupResponse ( String jsonString ) {
 		super ( jsonString );
 	}
 
@@ -28,9 +28,13 @@ public class GroupOperatorResponse extends WxmpResponseBase {
 	}
 
 	public List<Group> getResultGroups () {
+		String jsonString = getProperty ( GROUP );
+		if ( jsonString == null || jsonString.trim ().length () == 0 ) {
+			return null;
+		}
+
 		JSONArray groups = JSONArray.parseArray (
 				getProperty ( GROUPS ) );
-
 		List<Group> groupList = new ArrayList<Group> ();
 		for ( int ii = 0; ii < groups.size (); ii++ ) {
 			Group group = Group.fromJsonString (

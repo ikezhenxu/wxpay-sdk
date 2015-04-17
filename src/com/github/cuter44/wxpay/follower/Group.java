@@ -42,11 +42,21 @@ public class Group implements Serializable {
 	}
 
 	public static Group fromJsonString ( String jsonString ) {
+		if ( jsonString == null || jsonString.trim ().length () == 0 ) {
+			return null;
+		}
 		JSONObject jsonObject = JSONObject.parseObject ( jsonString );
 		Group group = new Group ();
 		group.setCount ( jsonObject.getInteger ( KEY_COUNT ) );
 		group.setId ( jsonObject.getString ( KEY_ID ) );
 		group.setName ( jsonObject.getString ( KEY_NAME ) );
 		return group;
+	}
+
+	public JSONObject toJson () {
+		JSONObject jsonObject = new JSONObject ();
+		jsonObject.put ( "id", id );
+		jsonObject.put ( "name", name );
+		return jsonObject;
 	}
 }

@@ -2,8 +2,8 @@ package com.github.cuter44.wxpay.follower.reqs;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.cuter44.wxpay.follower.resp.FollowerOperatorResponse;
 import com.github.cuter44.wxpay.resps.SnsOAuthAccessTokenResponse;
+import com.github.cuter44.wxpay.resps.WxmpResponseBase;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
 
@@ -41,71 +41,83 @@ public class FollowerOperator {
 	 *
 	 * @param openId 用户openId
 	 * @param remark 用户新的备注名
-	 * @return {@link FollowerOperatorResponse}
-	 * @throws IOException
+	 * @return {@link WxmpResponseBase}
 	 */
-	public FollowerOperatorResponse executeUpdateRemark ( String openId, String remark ) throws IOException {
-		String data = "{\"openid\":\"" + openId + "\",\"remark\":\"" + remark + "\"}";
-		String responseJson = new String (
-				Request.Post ( URL_API_BASE + "info/updateremark?access_token=" + accessToken )
-						.body ( new StringEntity ( data ) )
-						.execute ()
-						.returnContent ()
-						.asBytes (), "utf-8"
-		);
-		return new FollowerOperatorResponse ( responseJson );
+	public WxmpResponseBase executeUpdateRemark ( String openId, String remark ) {
+		try {
+			String data = "{\"openid\":\"" + openId + "\",\"remark\":\"" + remark + "\"}";
+			String responseJson = new String (
+					Request.Post ( URL_API_BASE + "info/updateremark?access_token=" + accessToken )
+							.body ( new StringEntity ( data ) )
+							.execute ()
+							.returnContent ()
+							.asBytes (), "utf-8"
+			);
+			return new WxmpResponseBase ( responseJson );
+		} catch ( IOException e ) {
+			e.printStackTrace ();
+			throw new RuntimeException ( e );
+		}
 	}
 
 	/**
 	 * 获取粉丝总数量
 	 *
 	 * @return 粉丝总数量
-	 * @throws IOException
 	 */
-	public int executeGetFollowersCount () throws IOException {
-		String responseJson = new String (
-				Request.Get ( URL_API_BASE + "get?access_token=" + accessToken )
-						.execute ()
-						.returnContent ()
-						.asBytes (), "utf-8"
-		);
-		JSONObject jsonObject = JSONObject.parseObject ( responseJson );
-		return jsonObject.getInteger ( TOTAL );
+	public int executeGetFollowersCount () {
+		try {
+			String responseJson = new String (
+					Request.Get ( URL_API_BASE + "get?access_token=" + accessToken )
+							.execute ()
+							.returnContent ()
+							.asBytes (), "utf-8"
+			);
+			JSONObject jsonObject = JSONObject.parseObject ( responseJson );
+			return jsonObject.getInteger ( TOTAL );
+		} catch ( IOException e ) {
+			e.printStackTrace ();
+			throw new RuntimeException ( e );
+		}
 	}
 
 	/**
 	 * 获取所有粉丝的openid列表
 	 *
 	 * @return 所有粉丝openId列表
-	 * @throws IOException
 	 */
-	public List<String> executeGetAllFollowers () throws IOException {
+	public List<String> executeGetAllFollowers () {
 		boolean firstTime = true;
 		String nextOpenId = "";
 		LinkedList<String> result = new LinkedList<String> ();
+		try {
+			while ( true ) {
+				String responseJson = null;
+				responseJson = new String (
+						Request.Get (
+								URL_API_BASE + "get?access_token=" + accessToken
+										+ ( firstTime ? "" : ( "&next_openid=" + nextOpenId ) )
+						)
+								.execute ()
+								.returnContent ()
+								.asBytes (), "utf-8"
+				);
 
-		while ( true ) {
-			String responseJson = new String (
-					Request.Get (
-							URL_API_BASE + "get?access_token=" + accessToken
-									+ ( firstTime ? "" : ( "&next_openid=" + nextOpenId ) )
-					)
-							.execute ()
-							.returnContent ()
-							.asBytes (), "utf-8"
-			);
-
-			JSONObject jsonObject = JSONObject.parseObject ( responseJson );
-			nextOpenId = jsonObject.getString ( NEXT_OPENID );
-			JSONObject data = jsonObject.getJSONObject ( DATA );
-			JSONArray openIds = data.getJSONArray ( OPENID );
-			for ( int ii = 0; ii < openIds.size (); ii++ ) {
-				result.addLast ( openIds.getString ( ii ) );
+				JSONObject jsonObject = JSONObject.parseObject ( responseJson );
+				nextOpenId = jsonObject.getString ( NEXT_OPENID );
+				JSONObject data = jsonObject.getJSONObject ( DATA );
+				JSONArray openIds = data.getJSONArray ( OPENID );
+				for ( int ii = 0; ii < openIds.size (); ii++ ) {
+					result.addLast ( openIds.getString ( ii ) );
+				}
+				if ( nextOpenId == null || nextOpenId.trim ().equals ( "" ) ) {
+					break;
+				}
 			}
-			if ( nextOpenId == null || nextOpenId.trim ().equals ( "" ) ) {
-				break;
-			}
+			return result;
+		} catch ( IOException e ) {
+			e.printStackTrace ();
+			throw new RuntimeException ( e );
 		}
-		return result;
 	}
 }
