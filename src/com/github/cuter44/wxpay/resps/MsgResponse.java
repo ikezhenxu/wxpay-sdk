@@ -1,4 +1,4 @@
-package com.github.cuter44.wxpay.message.resp;
+package com.github.cuter44.wxpay.resps;
 
 import com.github.cuter44.wxpay.WxmpException;
 import com.github.cuter44.wxpay.resps.WxmpResponseBase;

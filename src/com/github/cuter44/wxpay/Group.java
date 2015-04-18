@@ -1,4 +1,4 @@
-package com.github.cuter44.wxpay.follower;
+package com.github.cuter44.wxpay;
 
 import com.alibaba.fastjson.JSONObject;
 

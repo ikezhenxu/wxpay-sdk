@@ -1,4 +1,4 @@
-package com.github.cuter44.wxpay.message;
+package com.github.cuter44.wxpay;
 
 import com.alibaba.fastjson.JSONObject;
 

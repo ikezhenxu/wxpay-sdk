@@ -1,4 +1,4 @@
-package com.github.cuter44.wxpay.follower.reqs;
+package com.github.cuter44.wxpay.reqs;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
