@@ -1,15 +1,14 @@
 package com.github.cuter44.wxpay.resps;
 
-import java.util.List;
-import java.util.Properties;
-import java.util.Iterator;
-import java.io.UnsupportedEncodingException;
-
-import com.github.cuter44.nyafx.crypto.*;
-import com.github.cuter44.nyafx.text.*;
-
+import com.github.cuter44.nyafx.crypto.CryptoBase;
+import com.github.cuter44.nyafx.text.URLBuilder;
 import com.github.cuter44.wxpay.WxpayException;
 import com.github.cuter44.wxpay.WxpayProtocolException;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 /** General response passed by req.execute() or alipay callback/redirect gateways
  * Actually reqs/gateways passed excatly response type, i.e. sub-class of this.
@@ -238,7 +237,6 @@ public class ResponseBase
             String key = iter.next();
             ret.setProperty(key, prop.getProperty(key));
         }
-
         return(ret);
     }
 }

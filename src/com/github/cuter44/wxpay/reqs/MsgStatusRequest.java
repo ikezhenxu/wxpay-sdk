@@ -30,6 +30,11 @@ public class MsgStatusRequest extends GroupRequestBase {
 		return this;
 	}
 
+	/**
+	 * 查询群发消息发送状态【订阅号与服务号认证后均可用】
+	 *
+	 * @return {@see MsgResponse}
+	 */
 	@Override
 	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
 		return checkStatus ();
@@ -39,12 +44,7 @@ public class MsgStatusRequest extends GroupRequestBase {
 		this.msgId = msgId;
 	}
 
-	/**
-	 * 查询群发消息发送状态【订阅号与服务号认证后均可用】
-	 *
-	 * @return {@see MsgResponse}
-	 */
-	public MsgResponse checkStatus () {
+	protected MsgResponse checkStatus () {
 		if ( msgId == null || msgId.toString ().length () == 0 ) {
 			throw new RuntimeException ( "MsgId cannot be null or empty." );
 		}

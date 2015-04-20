@@ -33,6 +33,13 @@ public class MsgPreviewRequest extends GroupRequestBase {
 		return this;
 	}
 
+	/**
+	 * 预览接口【订阅号与服务号认证后均可用】
+	 * <p/>
+	 * 开发者可通过该接口发送消息给指定用户，在手机端查看消息的样式和排版。
+	 *
+	 * @return {@see MsgResponse}
+	 */
 	@Override
 	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
 		return preview ();
@@ -43,14 +50,7 @@ public class MsgPreviewRequest extends GroupRequestBase {
 		this.wxMsg = wxMsg;
 	}
 
-	/**
-	 * 预览接口【订阅号与服务号认证后均可用】
-	 * <p/>
-	 * 开发者可通过该接口发送消息给指定用户，在手机端查看消息的样式和排版。
-	 *
-	 * @return {@see MsgResponse}
-	 */
-	public MsgResponse preview () {
+	private MsgResponse preview () {
 		if ( openid == null || openid.trim ().length () == 0 || wxMsg == null ) {
 			throw new IllegalArgumentException ( "Neither OpenId nor WxMsg can be null or empty." );
 		}

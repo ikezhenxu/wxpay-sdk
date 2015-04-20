@@ -31,16 +31,6 @@ public class MsgSendToAll extends GroupRequestBase {
 		}
 		return this;
 	}
-
-	@Override
-	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
-		return null;
-	}
-
-	public void setup ( WxMsg wxMsg ) {
-		this.wxMsg = wxMsg;
-	}
-
 	/**
 	 * 发送消息给所有用户
 	 * <p/>
@@ -52,13 +42,23 @@ public class MsgSendToAll extends GroupRequestBase {
 	 *
 	 * @return {@see MsgResponse}
 	 */
+	@Override
+	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
+		return send2All ();
+	}
+
+	public void setup ( WxMsg wxMsg ) {
+		this.wxMsg = wxMsg;
+	}
+
+
 	protected MsgResponse send2All () {
 		JSONObject filter = new JSONObject ();
 		filter.put ( "is_to_all", true );
 		return sendWithFilter ( wxMsg, filter );
 	}
 
-	private MsgResponse sendWithFilter ( WxMsg wxMsg, JSONObject filter ) {
+	protected MsgResponse sendWithFilter ( WxMsg wxMsg, JSONObject filter ) {
 
 		JSONObject data = wxMsg.toJson ();
 		data.put ( "filter", filter );

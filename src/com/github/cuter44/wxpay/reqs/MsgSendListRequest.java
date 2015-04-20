@@ -35,16 +35,6 @@ public class MsgSendListRequest extends GroupRequestBase {
 		return this;
 	}
 
-	@Override
-	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
-		return send2List ();
-	}
-
-	public void setup ( List<String> openIds, WxMsg wxMsg ) {
-		this.openIds = openIds;
-		this.wxMsg = wxMsg;
-	}
-
 	/**
 	 * <br>根据OpenID列表群发【订阅号不可用，服务号认证后可用】
 	 * <p/>
@@ -56,7 +46,17 @@ public class MsgSendListRequest extends GroupRequestBase {
 	 *
 	 * @return {@see MsgResponse}
 	 */
-	public MsgResponse send2List () {
+	@Override
+	public ResponseBase execute () throws WxpayException, WxpayProtocolException, UnsupportedOperationException {
+		return send2List ();
+	}
+
+	public void setup ( List<String> openIds, WxMsg wxMsg ) {
+		this.openIds = openIds;
+		this.wxMsg = wxMsg;
+	}
+
+	private MsgResponse send2List () {
 		if ( openIds == null || openIds.isEmpty () || wxMsg == null ) {
 			throw new IllegalArgumentException ( "OpenId list and WxMsg can not be null or empty." );
 		}
