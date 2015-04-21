@@ -7,7 +7,7 @@ import com.github.cuter44.wxpay.WxmpException;
 /**
  * Created by kezhenxu on 4/17/15.
  */
-public class MsgResponse extends ResponseBase {
+public class MessageResponse extends ResponseBase {
 
 	public static final String MSD_ID     = "msg_id";
 	public static final String MSG_STATUS = "msg_status";
@@ -22,7 +22,7 @@ public class MsgResponse extends ResponseBase {
 
 	protected JSONObject jsonObject;
 
-	public MsgResponse ( String jsonString ) {
+	public MessageResponse ( String jsonString ) {
 		try {
 			this.jsonObject = JSON.parseObject ( jsonString );
 		} catch ( Exception ex ) {

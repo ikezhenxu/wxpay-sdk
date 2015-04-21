@@ -26,8 +26,7 @@ public class FollowerRequest extends RequestBase {
 
 	enum ExecuteType {
 		RETRIEVE_GROUP_IN, RETRIEVE_ALL, RETRIEVE_COUNT,
-		UPDATE_REMARK, UPDATE_MOVE, UPDATE_BATCH_MOVE,
-		DELETE
+		UPDATE_REMARK, UPDATE_MOVE, UPDATE_BATCH_MOVE
 	}
 
 	protected String        accessToken;

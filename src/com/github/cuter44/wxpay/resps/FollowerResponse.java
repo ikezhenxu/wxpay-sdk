@@ -39,7 +39,7 @@ public class FollowerResponse extends ResponseBase {
 		return json.getInteger ( "total" );
 	}
 
-	public int getGroupId() {
+	public int getGroupIdIn() {
 		return json.getInteger ( "groupid" );
 	}
 

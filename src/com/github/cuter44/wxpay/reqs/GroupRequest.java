@@ -7,6 +7,7 @@ import com.github.cuter44.wxpay.resps.GroupResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Properties;
 public class GroupRequest extends RequestBase {
 
 	enum ExecuteType {
-		CREATE, RETRIEVE, UPDATE, DELETE;
+		CREATE, RETRIEVE_ALL, UPDATE_NAME, DELETE;
 	}
 
 	protected static final String KEY_ID          = "id";
@@ -36,8 +37,8 @@ public class GroupRequest extends RequestBase {
 	protected ExecuteType executeType = null;
 	protected String accessToken;
 	protected String name;
-	protected int    id;
-	protected int    toGroupId;
+	protected Integer    id;
+	protected Integer    toGroupId;
 
 	public GroupRequest ( String aAccessToken, Properties aConf ) {
 		super ( aConf );
@@ -76,42 +77,16 @@ public class GroupRequest extends RequestBase {
 			String returnContent;
 			switch ( executeType ) {
 				case CREATE:
-					body = String.format ( "{\"group\": {\"id\": %d, \"name\": \"%s\"}}", id, name );
-					url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=%s", accessToken );
-					returnContent =
-							Request.Post ( url )
-							       .bodyString ( body, ContentType.APPLICATION_JSON )
-							       .execute ()
-							       .returnContent ()
-							       .asString ();
+					returnContent = executeCreate ();
 					break;
-				case RETRIEVE:
-					url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/get?access_token=%s", accessToken );
-					returnContent =
-							Request.Get ( url )
-							       .execute ()
-							       .returnContent ()
-							       .asString ();
+				case RETRIEVE_ALL:
+					returnContent = executeRetrieve ();
 					break;
-				case UPDATE:
-					body = String.format ( "{\"group\": {\"id\": %d, \"name\": \"%s\"}}", id, name );
-					url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/update?access_token=%s", accessToken );
-					returnContent =
-							Request.Post ( url )
-							       .bodyString ( body, ContentType.APPLICATION_JSON )
-							       .execute ()
-							       .returnContent ()
-							       .asString ();
+				case UPDATE_NAME:
+					returnContent = executeUpdateName ();
 					break;
 				case DELETE:
-					body = String.format ( "{\"group\":{\"id\":%d}}", id );
-					url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/delete?access_token=%s", accessToken );
-					returnContent =
-							Request.Post ( url )
-							       .bodyString ( body, ContentType.APPLICATION_JSON )
-							       .execute ()
-							       .returnContent ()
-							       .asString ();
+					returnContent = executeDelete ();
 					break;
 				default:
 					throw new IllegalStateException ( "Call setExecuteType before calling execute." );
@@ -121,6 +96,63 @@ public class GroupRequest extends RequestBase {
 			e.printStackTrace ();
 			throw new RuntimeException ( e );
 		}
+	}
+
+	private String executeDelete () throws IOException {
+		String body;
+		String url;
+		String returnContent;
+		body = String.format ( "{\"group\":{\"id\":%d}}", id );
+		url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/delete?access_token=%s", accessToken );
+		returnContent =
+				Request.Post ( url )
+				       .bodyString ( body, ContentType.APPLICATION_JSON )
+				       .execute ()
+				       .returnContent ()
+				       .asString ();
+		return returnContent;
+	}
+
+	private String executeUpdateName () throws IOException {
+		String body;
+		String url;
+		String returnContent;
+		body = String.format ( "{\"group\": {\"id\": %d, \"name\": \"%s\"}}", id, name );
+		url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/update?access_token=%s", accessToken );
+		returnContent =
+				Request.Post ( url )
+				       .bodyString ( body, ContentType.APPLICATION_JSON )
+				       .execute ()
+				       .returnContent ()
+				       .asString ();
+		return returnContent;
+	}
+
+	private String executeRetrieve () throws IOException {
+		String url;
+		String returnContent;
+		url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/get?access_token=%s", accessToken );
+		returnContent =
+				Request.Get ( url )
+				       .execute ()
+				       .returnContent ()
+				       .asString ();
+		return returnContent;
+	}
+
+	private String executeCreate () throws IOException {
+		String body;
+		String url;
+		String returnContent;
+		body = String.format ( "{\"group\": {\"id\": %d, \"name\": \"%s\"}}", id, name );
+		url = String.format ( "https://api.weixin.qq.com/cgi-bin/groups/create?access_token=%s", accessToken );
+		returnContent =
+				Request.Post ( url )
+				       .bodyString ( body, ContentType.APPLICATION_JSON )
+				       .execute ()
+				       .returnContent ()
+				       .asString ();
+		return returnContent;
 	}
 
 	public ExecuteType getExecuteType () {
